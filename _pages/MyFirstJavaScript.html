@@ -1,0 +1,166 @@
+---
+layout: page
+title: JavaScript Local Storage Login System
+permalink: /MyFirstJavaScript/
+---
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    </head>
+    <style>
+        .signin-container {
+            height: 350px;
+            width: 300px;
+            background-color: gray;
+            margin: auto;
+        }
+        
+        .signup-container {
+            height: 400px;
+            width: 300px;
+            background-color: gray;
+            margin: auto;
+        }
+
+        label {
+            color: white;
+            display: block;
+            text-align: center;
+        }
+
+        input {
+            height: 30px;
+            width: 250px;
+            background-color: white;
+            color: black;
+            display: block;
+            margin: auto;
+        }
+        
+        .button-1 {
+            height: 30px;
+            width: 250px;
+            background-color: white;
+            color: black;
+            border: 2px solid;
+            border-image: linear-gradient(45deg, blue, orange) 1;
+            position: relative; 
+            top: 40px;
+            transition-duration: 0.7s;
+        } 
+
+        .button-1:hover {
+            border-image: linear-gradient(45deg, orange, blue) 1;
+        }
+    </style>
+    <body>
+        <h1 id = "account-status"></h1>
+        <div class = "signin-container">
+            <h1 style = "color: white; text-align: center; position: relative; top: 10px;">Sign In</h1>
+            <hr>
+            <form onsubmit = "signin()" id = "signinForm">
+                <label>Username</label>
+                <br>
+                <input type = "text" id = "username1" name = "username1" required>
+                <br>
+                <label>Password</label>
+                <br>
+                <input type = "password" id = "password1" name = "password1" required>
+                <input type = "submit" value = "Sign In" class = "button-1">
+            </form>
+        </div>
+
+        <div class = "signup-container">
+            <h1 style = "color: white; text-align: center; position: relative; top: 10px;">Sign Up</h1>
+            <hr>
+            <form onsubmit = "signup()" id = "signupForm">
+                <label>Username</label>
+                <br>
+                <input type = "text" id = "username2" name = "username2" required>
+                <br>
+                <label>Password</label>
+                <br>
+                <input type = "password" id = "password2" name = "password2" required>
+                <br>
+                <label>Confirm Password</label>
+                <br>
+                <input type = "password" id = "password3" name = "password3" required>
+                <input type = "submit" value = "Sign Up" class = "button-1" style = "margin-top: -20px;">
+            </form>
+        </div>
+        <script>
+            var accountStatus = document.getElementById("account-status");
+
+            var username1Input = document.getElementById("username1");
+            var password1Input = document.getElementById("password1");
+
+            var username2Input = document.getElementById("username2");
+            var password2Input = document.getElementById("password2");
+            var password3Input = document.getElementById("password3");
+
+            function signin() {
+                event.preventDefault();
+                var signinData = $("#signinForm").serializeArray();
+                var user = {
+                    name: signinData[0].value,
+                    passwd: signinData[1].value
+                };
+                if (localStorage.getItem("userListKey")) {
+                    var userListRetrieve2 = JSON.parse(localStorage.getItem("userListKey"));
+                    for (var a = 0; a < userListRetrieve2.length; a++) {
+                        if (user.name == userListRetrieve2[a].name && user.passwd == userListRetrieve2[a].passwd) {
+                            accountStatus.innerHTML = "Welcome back " + user.name + "!";
+                            username1Input.value = "";
+                            password1Input.value = "";
+                        } else if (a < userListRetrieve2.length - 1 && !(user.name == userListRetrieve2[a].name && user.passwd == userListRetrieve2[a].passwd)) {
+                        } else if  (a == userListRetrieve2.length - 1 && !(user.name == userListRetrieve2[a].name && user.passwd == userListRetrieve2[a].passwd)) {
+                            alert("Incorrect username and/or password!");
+                        }
+                    }
+                } else {
+                    alert("Incorrect username and/or password!");
+                }
+            }
+
+            function signup() {
+                event.preventDefault();
+                if (password2Input.value == password3Input.value) {
+                    var signupData = $("#signupForm").serializeArray();
+                    var newUser = {
+                        name: signupData[0].value,
+                        passwd: signupData[1].value 
+                    };
+                    if (localStorage.getItem("userListKey")) {
+                        var userListRetrieve1 = JSON.parse(localStorage.getItem("userListKey"));
+                        var occurrences = 0;
+                        for (var i = 0; i < userListRetrieve1.length; i++) {
+                            if (newUser.name == userListRetrieve1[i].name) {
+                                occurrences++;
+                            }
+                        }
+                        if (occurrences > 0) {
+                            alert("Username already taken!");
+                        } else {
+                            userListRetrieve1.push(newUser);
+                            localStorage.setItem("userListKey", JSON.stringify(userListRetrieve1));
+                            username2Input.value = "";
+                            password2Input.value = "";
+                            password3Input.value = "";
+                            accountStatus.innerHTML = "Welcome " + newUser.name + "!";
+                        }
+                    } else {
+                        var userList = [newUser];
+                        localStorage.setItem("userListKey", JSON.stringify(userList));
+                        username2Input.value = "";
+                        password2Input.value = "";
+                        password3Input.value = "";
+                        accountStatus.innerHTML = "Welcome " + newUser.name + "!";
+                    }
+                } else {
+                    alert("Passwords are not the same!");
+                }
+            }
+        </script>
+    </body>
+</html>
+

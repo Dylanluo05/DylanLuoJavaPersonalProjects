@@ -1,0 +1,77 @@
+---
+layout: page
+title: JavaScript Soccer RapidAPI
+permalink: /FirstRapidAPI/
+---
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    </head>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: auto;
+        }
+        th {
+            background-color: black;
+            color: black;
+            padding: 10px;
+        }
+        td {
+            padding: 10px;
+            color: black;
+        }
+        td:nth-child(odd) {
+            background-color: lightgray;
+        }
+        td:nth-child(even) {
+            background-color: darkgray;
+        }
+    </style>
+    <body>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Country</th>
+                <th>Team Name</th>
+            </tr>
+            <tr class = "data-row"></tr>
+            <tr class = "data-row"></tr>
+            <tr class = "data-row"></tr>
+            <tr class = "data-row"></tr>
+            <tr class = "data-row"></tr>
+            <tr class = "data-row"></tr>
+            <tr class = "data-row"></tr>
+            <tr class = "data-row"></tr>
+            <tr class = "data-row"></tr>
+        </table>
+        <script>
+        const settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "https://basketball-data.p.rapidapi.com/tournament/teams?tournamentId=89",
+            "method": "GET",
+            "headers": {
+                "X-RapidAPI-Key": "9205057203msh04a5e5cadaa01c8p11274ejsnf67dea2bb043",
+                "X-RapidAPI-Host": "basketball-data.p.rapidapi.com"
+            }
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+            for (var i = 0; i < response.length; i++) {
+                var newDataId = document.createElement("td");
+                newDataId.innerHTML = response[i].id;
+                var newDataCountry = document.createElement("td");
+                newDataCountry.innerHTML = response[i].country.name;
+                var newDataName = document.createElement("td");
+                newDataName.innerHTML = response[i].name;
+
+                $(".data-row").eq(i).append(newDataId);
+                $(".data-row").eq(i).append(newDataCountry);
+                $(".data-row").eq(i).append(newDataName);
+            }
+        });
+        </script>
+    </body>
+</html>
